@@ -8,7 +8,6 @@ import zaicon from "../assets/sortza.png";
 
 export default function Body({ searchText }) {
   const [countries, setAllCountries] = useState();
-  const [filteredCountries, setFilterCountreis] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const postPage = useRef(25).current;
   const [azsort, setAZSort] = useState(true);
@@ -27,7 +26,9 @@ export default function Body({ searchText }) {
     getCountries();
   }, []);
 
-  console.log("Search Text", searchText);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
 
   const indexOfLastPage = currentPage * postPage;
   const indexOfFirstPage = indexOfLastPage - postPage;
@@ -44,20 +45,19 @@ export default function Body({ searchText }) {
     sortedCountries = azsort
       ? _.orderBy(countries, ["name.common"], "asc")
       : _.orderBy(countries, ["name.common"], "desc");
-    console.log("sortedCountries", sortedCountries);
+
     filterCountries = searchText
       ? sortedCountries.filter((country) => {
           const officialName = country.name.official.toLowerCase();
-
           if (officialName.includes(searchText.toLowerCase())) return true;
         })
       : sortedCountries;
-    console.log("filterCountries", filterCountries);
 
     dataPagination = filterCountries.slice(indexOfFirstPage, indexOfLastPage);
     numberOfPages = Math.ceil(filterCountries.length / postPage);
     pageCountries = renderCountry(dataPagination);
   }
+  console.log("current page", currentPage);
 
   return (
     <div style={{ padding: 50 }}>
@@ -74,6 +74,7 @@ export default function Body({ searchText }) {
       </div>
       <div style={{ padding: 50, display: "flex", justifyContent: "center" }}>
         <BasicPagination
+          currentpage={currentPage}
           numberOfPages={numberOfPages}
           onPageChanged={onPageChanged}
         ></BasicPagination>
@@ -110,9 +111,6 @@ const renderCountry = (countries) => {
           altSpellings,
           idd,
         } = country;
-        {
-          /* console.log("nativeName : ", nativeName); */
-        }
 
         const details = {
           flagurl,

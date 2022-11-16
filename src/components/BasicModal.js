@@ -1,13 +1,10 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import _ from "lodash";
 
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { Card } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -32,16 +29,16 @@ export default function BasicModal({ details, modalIsOpen, onClose }) {
     altSpellings,
     idd: { root, suffixes },
   } = details;
-  console.log("details nativeNames", nativeName);
-  const nativeCoutnryName = _.reduce(
-    nativeName,
-    (result, value, key) => {
-      console.log("value ::", value);
-      return value.official;
-    },
-    {}
-  );
-  console.log("nativeCoutnryName:", nativeCoutnryName);
+
+  const nativeCoutnryName =
+    nativeName &&
+    _.reduce(
+      nativeName,
+      (result, value, key) => {
+        return value.official;
+      },
+      {}
+    );
   const alternativeCountryName = altSpellings.join();
   const countryCallingCodes = root + suffixes;
 
@@ -63,7 +60,7 @@ export default function BasicModal({ details, modalIsOpen, onClose }) {
           />
 
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div>{commonName}</div>
+            {commonName}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Official Name: {officialName}
